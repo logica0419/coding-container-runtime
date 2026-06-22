@@ -42,7 +42,7 @@ jobs:
         if: steps.mod-cache.outputs.cache-hit != 'true'
         run: bun install
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Build
         run: bun run build
       - name: Upload artifact
