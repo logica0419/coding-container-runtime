@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -51,6 +52,7 @@ jobs:
           path: ./docs/.vitepress/dist
   deploy:
     name: Deploy
+    if: github.event_name == 'pull_request'
     needs:
       - build
     environment:
