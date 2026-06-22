@@ -52,7 +52,7 @@ jobs:
           path: ./docs/.vitepress/dist
   deploy:
     name: Deploy
-    if: github.event_name == 'pull_request'
+    if: github.event_name != 'pull_request'
     needs:
       - build
     environment:
