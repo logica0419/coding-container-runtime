@@ -1,5 +1,5 @@
 {
-  "name": "Docker in Docker",
+  "name": "Coding Container Runtime Dev ",
   "image": "mcr.microsoft.com/devcontainers/base:bullseye",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:3.1.0": {
