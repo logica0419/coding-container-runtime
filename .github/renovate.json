@@ -1,0 +1,67 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
+  "labels": [
+    "dependencies"
+  ],
+  "postUpdateOptions": [
+    "gomodUpdateImportPaths",
+    "gomodTidy"
+  ],
+  "packageRules": [
+    {
+      "description": "Upgrade go indirect dependencies",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepTypes": [
+        "indirect"
+      ],
+      "enabled": true
+    },
+    {
+      "description": "Restrict go indirect dependencies up to minor",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepTypes": [
+        "indirect"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Auto merge up to major",
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch",
+        "digest",
+        "pin",
+        "pinDigest"
+      ],
+      "automerge": true
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "GitHub URL dependencies",
+      "managerFilePatterns": [
+        "/.+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "https://github\\.com/(?<depName>[^/]+/[^/]+)//.*?\\?ref=(?<currentValue>\\S+)",
+        "https://raw\\.githubusercontent\\.com/(?<depName>[^/]+/[^/]+)/(?<currentValue>[^/]+)",
+        "https://github\\.com/(?<depName>[^/]+/[^/]+)/releases/download/(?<currentValue>[^/]+)"
+      ],
+      "datasourceTemplate": "github-releases"
+    }
+  ]
+}
