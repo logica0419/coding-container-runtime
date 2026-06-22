@@ -1,0 +1,22 @@
+name: Actions CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Lint Actions
+        uses: reviewdog/action-actionlint@v1
+        with:
+          fail_level: any
