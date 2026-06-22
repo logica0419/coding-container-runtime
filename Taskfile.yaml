@@ -1,0 +1,106 @@
+version: 3
+
+# Task definition order
+#
+# 1.
+#   desc
+#
+# 2.
+#   internal
+#   dir
+#   silent
+#
+# 3.
+#   vars
+#   status / sources / generates / methods / preconditions
+#   deps
+#
+# 4.
+#   cmds
+
+tasks:
+  check-binary:
+    desc: Check if the binary exists
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if ! (type {{.BINARY}} >/dev/null 2>&1); then
+          echo "Install \"{{if .ALT_NAME}}{{.ALT_NAME}}{{else}}{{.BINARY}}{{end}}\" and rerun this task."
+          echo {{.INSTALL_DOC}}
+          exit 1
+        fi
+
+  init:
+    desc: Initialize the workspace
+    deps:
+      - task: check-binary
+        vars:
+          BINARY: bun
+          INSTALL_DOC: https://bun.sh/docs/installation
+      - task: check-binary
+        vars:
+          BINARY: go
+          INSTALL_DOC: https://go.dev/doc/install
+    cmds:
+      - cd docs && bun install
+
+  lint:
+    desc: Lint Go code
+    deps:
+      - task: check-binary
+        vars:
+          BINARY: golangci-lint
+          INSTALL_DOC: https://golangci-lint.run/welcome/install/
+    cmds:
+      - golangci-lint run
+      - cd templates && golangci-lint run
+
+  format:
+    desc: Format Go code
+    deps:
+      - task: check-binary
+        vars:
+          BINARY: go
+          INSTALL_DOC: https://go.dev/doc/install
+      - task: check-binary
+        vars:
+          BINARY: golangci-lint
+          INSTALL_DOC: https://golangci-lint.run/welcome/install/
+    cmds:
+      - go mod tidy
+      - cd templates && go mod tidy
+      - golangci-lint fmt
+
+  build-go:
+    desc: Build Go code
+    deps:
+      - task: check-binary
+        vars:
+          BINARY: go
+          INSTALL_DOC: https://go.dev/doc/install
+    cmds:
+      - CGO_ENABLED=0 go build -o main ./templates/*.go
+      - CGO_ENABLED=0 go build -o main ./reference/*.go
+
+  build:
+    desc: Build static assets of the documentation
+    dir: docs
+    deps:
+      - task: check-binary
+        vars:
+          BINARY: bun
+          INSTALL_DOC: https://bun.sh/docs/installation
+    cmds:
+      - bun run build
+
+  dev:
+    desc: Start the development server
+    dir: docs
+    deps:
+      - task: check-binary
+        vars:
+          BINARY: bun
+          INSTALL_DOC: https://bun.sh/docs/installation
+    cmds:
+      - bun run dev

@@ -23,7 +23,7 @@ func SetupRootfs(c RootfsConfig) error {
 	}
 
 	// 既存のルートファイルシステムを移動させるディレクトリを作成
-	if err := os.MkdirAll(filepath.Join(c.RootfsPath, "/.old_root"), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Join(c.RootfsPath, "/.old_root"), 0o755); err != nil {
 		return errors.WithStack(err)
 	}
 
@@ -33,7 +33,7 @@ func SetupRootfs(c RootfsConfig) error {
 	}
 
 	// procディレクトリをマウント
-	if err := os.MkdirAll(filepath.Join(c.RootfsPath, "proc"), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Join(c.RootfsPath, "proc"), 0o755); err != nil {
 		return errors.WithStack(err)
 	}
 	if err := unix.Mount("", filepath.Join(c.RootfsPath, "proc"), "proc", 0, ""); err != nil {
@@ -65,7 +65,7 @@ func SetupRootfs(c RootfsConfig) error {
 // 参考: 第一段階、Chroot版の実装 (脆弱)
 func SetupRootfs_Chroot(c RootfsConfig) error {
 	// procディレクトリをマウント
-	if err := os.MkdirAll(filepath.Join(c.RootfsPath, "proc"), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Join(c.RootfsPath, "proc"), 0o755); err != nil {
 		return errors.WithStack(err)
 	}
 	if err := unix.Mount("", filepath.Join(c.RootfsPath, "proc"), "proc", 0, ""); err != nil {
