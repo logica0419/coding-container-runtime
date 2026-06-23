@@ -1,8 +1,8 @@
 # 2-2. 今回の目標
 
-今回のハンズオンで作る物の**参考実装**が、以下のブランチに置いてあります。
+今回のハンズオンで作る物の**参考実装**が、以下のリポジトリに置いてあります。
 
-<https://github.com/logica0419/gwc2025-container-runtime/tree/reference>
+<https://github.com/logica0419/coding-container-runtime/tree/main/reference>
 
 ## 実演
 
