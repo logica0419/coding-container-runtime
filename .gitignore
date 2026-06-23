@@ -2,7 +2,7 @@ main
 config.json
 rootfs/
 spec/
-devcontainer-lock.json
+templates/.devcontainer/devcontainer-lock.json
 
 ### VisualStudioCode ###
 .vscode/
