@@ -14,7 +14,7 @@ done
 
 git clone --depth 1 --filter=blob:none --sparse "$repo_url" "$tmp_dir/repo"
 git -C "$tmp_dir/repo" sparse-checkout set templates
-cp -a "$tmp_dir/repo/templates" .
+cp -a "$tmp_dir/repo/templates/." .
 
 make init
 make rootfs
