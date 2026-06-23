@@ -4,7 +4,7 @@ import type { VitePressSidebarOptions } from "vitepress-sidebar/types";
 
 const config: UserConfig<DefaultTheme.Config> = {
   title: "低レベルコンテナランタイム自作講座",
-  description: "Go Workshop Conference 2025 IN KOBEにて開催",
+  description: "コンテナ技術の地盤を理解する",
   head: [
     [
       "link",
@@ -37,21 +37,21 @@ const config: UserConfig<DefaultTheme.Config> = {
       "meta",
       {
         property: "og:description",
-        content: "Go Workshop Conference 2025 IN KOBEにて開催",
+        content: "コンテナ技術の地盤を理解する",
       },
     ],
     [
       "meta",
       {
         property: "og:url",
-        content: "https://gwc2025.logica0419.dev",
+        content: "https://coding-container-runtime.logica0419.dev",
       },
     ],
     [
       "meta",
       {
         property: "og:image",
-        content: "https://gwc2025.logica0419.dev/image.png",
+        content: "https://coding-container-runtime.logica0419.dev/image.png",
       },
     ],
     [
@@ -61,14 +61,14 @@ const config: UserConfig<DefaultTheme.Config> = {
         "@context" : "https://schema.org",
         "@type" : "WebSite",
         "name" : "低レベルコンテナランタイム自作講座",
-        "url" : "https://gwc2025.logica0419.dev/"
+        "url" : "https://coding-container-runtime.logica0419.dev/"
       }`,
     ],
   ],
   srcDir: ".",
   lastUpdated: true,
   sitemap: {
-    hostname: "https://gwc2025.logica0419.dev",
+    hostname: "https://coding-container-runtime.logica0419.dev",
     lastmodDateOnly: false,
   },
   themeConfig: {
@@ -76,7 +76,7 @@ const config: UserConfig<DefaultTheme.Config> = {
     socialLinks: [
       {
         icon: "github",
-        link: "https://github.com/logica0419/gwc2025-container-runtime",
+        link: "https://github.com/logica0419/coding-container-runtime",
       },
     ],
   },
