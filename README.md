@@ -7,7 +7,7 @@
 ## `/template`: ハンズオン用テンプレート
 
 ハンズオンパートで使う作業用テンプレートです。  
-詳細は[README.md](./templates/README.md)を参照してください。
+詳細は[README.md](./templates/README.md)を参照して下さい。
 
 ## `/docs`: 教材
 

@@ -7,15 +7,15 @@
 
 ## 共通準備
 
-作業ディレクトリを作成し、セットアップスクリプトを実行します。
+作業ディレクトリを作成し、必要なファイルをダウンロードします。
 
 ```bash
 mkdir {好きなディレクトリ名}
 cd {好きなディレクトリ名}
-curl -fsSL https://raw.githubusercontent.com/logica0419/coding-container-runtime/main/setup.sh | sh
+curl -fsSL https://raw.githubusercontent.com/logica0419/coding-container-runtime/main/init.sh | sh
 ```
 
-## Dev Container (推奨)
+## 選択肢1: Dev Container (推奨)
 
 本ワークショップでは、**Dev Container**設定ファイルを用意しています。  
 Dev Containerは**開発環境をコンテナとして定義**し、エディタ/IDEをその中で実行できる仕組みです。
@@ -35,10 +35,11 @@ OCI Runtimeに**youki**を指定している場合、構築が失敗してしま
 [公式ドキュメント](https://code.visualstudio.com/docs/devcontainers/containers)の通りです。
 
 1. [Dev Containers拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)をVS Codeにインストール
-2. 右下に以下のような通知が出るはずなので「**コンテナーで再度開く**」をクリック
+2. 作業ディレクトリをVS Codeで開く
+3. 右下に以下のような通知が出るはずなので「**コンテナーで再度開く**」をクリック
    - 通知が出なければ再度VS Codeを開き直して下さい  
      ![通知](./1.png)
-3. しばらく待てば環境構築が終わっているはずです
+4. しばらく待てば環境構築が終わっているはずです
 
 ### GoLandの場合
 
@@ -57,7 +58,7 @@ OCI Runtimeに**youki**を指定している場合、構築が失敗してしま
 講師はVS Codeを使用しているため、**十分にサポートできない**場合があります。
 :::
 
-## ローカルLinux
+## 選択肢2: ローカルLinux
 
 Dev Containersを使わなくとも、今回の**コードがLinux上で起動**できれば問題ありません。  
 以下のような手段が取れるかと思います。ご興味があれば挑戦してみて下さい。
@@ -87,9 +88,16 @@ VS Codeの場合、[Remote - SSH](https://marketplace.visualstudio.com/items?ite
 
 ワークショップで用いるコンピューターのOSが**既にLinux**であれば、そのまま使っていただいて大丈夫です。
 
-## セットアップ確認
+## 作業環境のセットアップ
 
-環境のセットアップが終わったら、`make check`コマンドで確認をお願いします。  
+作業ディレクトリで以下のコマンドを実行し、必要なファイルを生成して下さい。
+
+```sh
+make init
+make rootfs
+```
+
+セットアップが終わったら、`make check`コマンドで確認をお願いします。  
 以下のように、全ての項目が ✅ になればOKです。
 
 ```console
