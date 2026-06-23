@@ -7,12 +7,12 @@
 
 ## 共通準備
 
-1. <https://github.com/logica0419/gwc2025-container-runtime>をフォークする
-2. フォークを普段通り自分のPCにクローンする
+以下のコマンドを実行して、セットアップスクリプトをダウンロードし実行します。
 
 ```bash
-git clone https://github.com/{あなたのアカウント名}/gwc2025-container-runtime
-cd gwc2025-container-runtime
+mkdir {好きなディレクトリ名}
+cd {好きなディレクトリ名}
+curl -fsSL https://raw.githubusercontent.com/logica0419/coding-container-runtime/main/setup.sh | sh
 ```
 
 ## Dev Container (推奨)
@@ -68,13 +68,6 @@ Dev Containersを使わなくとも、今回の**コードがLinux上で起動**
   - ディストリビューションは何でもOKです
 - **Go**がインストールされている
 - **Docker**がインストールされている
-
-また、上記の準備が終わったら、以下の2つのコマンドを実行して下さい。
-
-```bash
-make init
-make rootfs
-```
 
 ### Windowsの場合
 
