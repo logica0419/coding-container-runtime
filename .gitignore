@@ -1,22 +1,8 @@
-# Created by https://www.toptal.com/developers/gitignore/api/go,visualstudiocode,goland
-# Edited by Takuto Nagami (@logica0419)
-
 main
 config.json
 rootfs/
 spec/
-
-### GoLand ###
-
-# User-specific stuff
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/usage.statistics.xml
-.idea/**/dictionaries
-.idea/**/shelf
-
-# IntelliJ
-out/
+devcontainer-lock.json
 
 ### VisualStudioCode ###
 .vscode/
