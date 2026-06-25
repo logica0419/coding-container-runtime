@@ -2,7 +2,7 @@
   "name": "Coding Container Runtime Dev ",
   "image": "mcr.microsoft.com/devcontainers/base:bullseye",
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:3.1.0": {
+    "ghcr.io/devcontainers/features/docker-in-docker:4.0.0": {
       "version": "latest",
       "enableNonRootDocker": "true",
       "moby": "true"
