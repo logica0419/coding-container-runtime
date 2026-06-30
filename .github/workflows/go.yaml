@@ -30,7 +30,7 @@ jobs:
         with:
           working-directory: templates
       - name: Setup Task
-        uses: arduino/setup-task@v2
+        uses: arduino/setup-task@v3.0.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Format
@@ -51,7 +51,7 @@ jobs:
           go-version-file: go.mod
           cache-dependency-path: go.sum
       - name: Setup Task
-        uses: arduino/setup-task@v2
+        uses: arduino/setup-task@v3.0.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build
