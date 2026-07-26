@@ -2,7 +2,7 @@ package main
 
 // rootfs設定
 type RootfsConfig struct {
-	// 新しいルートディレクトリのパス
+	// 新しい(見かけ上の) ルートディレクトリのパス
 	RootDirPath string `json:"rootfs_path"`
 }
 

@@ -10,7 +10,7 @@ import (
 
 // rootfs設定
 type RootfsConfig struct {
-	// 新しいルートディレクトリのパス
+	// 新しい(見かけ上の) ルートディレクトリのパス
 	RootDirPath string `json:"rootfs_path"`
 }
 
@@ -72,7 +72,7 @@ func SetupRootfs_Chroot(c RootfsConfig) error {
 		return errors.WithStack(err)
 	}
 
-	// ルートディレクトリを変更
+	// 見かけ上のルートディレクトリを変更
 	if err := unix.Chroot(c.RootDirPath); err != nil {
 		return errors.WithStack(err)
 	}
