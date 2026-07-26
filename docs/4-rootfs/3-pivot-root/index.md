@@ -11,6 +11,15 @@
 
 ## 【前提】この節で扱うsyscall
 
+### [mount](https://pkg.go.dev/golang.org/x/sys/unix#Mount)
+
+```go
+func Mount(source string, target string, fstype string, flags uintptr, data string) (err error)
+```
+
+sourceのディレクトリをtargetに**マウント**します。  
+fstypeとflagsによって、**大量のオプション**を指定することができます。詳しくは調べてみて下さい。
+
 ### [pivot_root](https://pkg.go.dev/golang.org/x/sys/unix#PivotRoot)
 
 rootfsの**マウントを入れ替え**ます。  
@@ -54,7 +63,7 @@ chrootよりもはるかに**複雑なマウント処理**が必要になりま�
 
 :::details ヒント4
 Mount Namespaceを切り分けていても、**Mount Propagation**を正しく設定しないと、全てのマウントが引きずられます。  
-`/dev` `/sys` `/proc`など、カーネルから特殊マウントされているディレクトリ群は`/`**のマウントからPropagationされる**ので、pivot_rootした際にマウントが移動し、**仮想ターミナルを含むデバイス群が使用不可能**になります。
+`/dev` `/sys` `/proc`など、カーネルから特殊ファイルシステムをマウントされているディレクトリ群は**rootfsのマウントからPropagationされる**ので、pivot_rootした際にマウントが移動し、**仮想ターミナルを含むデバイス群が使用不可能**になります。
 
 `pivot_root`前に`/`に対して**モードを変えて再マウント**を行い、Propagationを切ってあげましょう。
 :::

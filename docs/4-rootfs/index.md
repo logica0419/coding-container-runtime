@@ -6,3 +6,8 @@
 この章で触るファイル: `rootfs.go`
 
 ## 目次
+
+- [4-1. マウントとrootfs](/4-rootfs/1-mount/)
+- [4-2. chrootを用いたルート移動](/4-rootfs/2-chroot/)
+- [4-3. pivot_rootを用いたルート移動](/4-rootfs/3-pivot-root/)
+- [4-4. 特殊マウントを処理する](/4-rootfs/4-special-mounts/)

@@ -14,7 +14,7 @@ func Chroot(path string) (err error)
 
 ## ルートを移動させる
 
-`unix.Chroot`を使った見かけ上のルートディレクトリ移動を、`rootfs.go`に実装してみましょう！  
+`unix.Chroot()`を使った見かけ上のルートディレクトリ移動を、`rootfs.go`に実装してみましょう！  
 見かけ上の**ルートディレクトリになるべきディレクトリ**のパスは、`RootfsConfig`の構造体で関数に渡されます。
 
 ```go

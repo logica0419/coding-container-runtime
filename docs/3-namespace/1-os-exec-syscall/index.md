@@ -181,7 +181,7 @@ func Exec(argv0 string, argv []string, envv []string) error
 :::
 
 :::details ヒント2
-`unix.Exec`の`argv0`は**絶対パス**である必要があります。  
+`unix.Exec()`の`argv0`は**絶対パス**である必要があります。  
 コマンド名から絶対パスを見つける関数、どうやら`os/exec`にありそうですよ[...？](https://pkg.go.dev/os/exec#LookPath)
 :::
 
