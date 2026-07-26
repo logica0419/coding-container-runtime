@@ -26,7 +26,7 @@ func SetupCgroup(name string, pid int, c CgroupConfig) error {
 	}
 
 	// コンテナ用の子グループ作成 (同名の子グループディレクトリがあれば削除)
-	//	フォルダを作成した時点で、cgroupで操作可能なリソースに対応するファイルが生成される
+	//	ディレクトリを作成した時点で、cgroupで操作可能なリソースに対応するファイルが生成される
 	if err := os.RemoveAll(filepath.Join(CgroupRoot, name)); err != nil {
 		return errors.WithStack(err)
 	}

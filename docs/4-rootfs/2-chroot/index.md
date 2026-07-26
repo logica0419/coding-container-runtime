@@ -1,12 +1,12 @@
 # 4-2. chrootを用いたルート移動
 
-それでは、chrootを用いてルートフォルダを移動させてみましょう！
+それでは、chrootを用いてルートディレクトリを移動させてみましょう！
 
 ## 【前提】この節で扱うsyscall
 
 ### chroot
 
-**OSに登録されているルートフォルダ**を変更します。
+**OSに登録されているルートディレクトリ**を変更します。
 
 ```go
 func Chroot(path string) (err error)
@@ -14,8 +14,8 @@ func Chroot(path string) (err error)
 
 ## ルートを移動させる
 
-`unix.Chroot`を使ったルートフォルダ移動を、`rootfs.go`に実装してみましょう！  
-**ルートフォルダになるべきディレクトリ**のパスは、`RootfsConfig`の構造体で関数に渡されます。
+`unix.Chroot`を使ったルートディレクトリ移動を、`rootfs.go`に実装してみましょう！  
+**ルートディレクトリになるべきディレクトリ**のパスは、`RootfsConfig`の構造体で関数に渡されます。
 
 ```go
 // rootfs設定
