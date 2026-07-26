@@ -20,8 +20,8 @@ func Chroot(path string) (err error)
 ```go
 // rootfs設定
 type RootfsConfig struct {
-  // ルートファイルシステムのパス
-  RootfsPath string `json:"rootfs_path"`
+  // 新しいルートディレクトリのパス
+  RootDirPath string `json:"rootfs_path"`
 }
 ```
 
@@ -37,7 +37,7 @@ type RootfsConfig struct {
 ```go
 func SetupRootfs(c RootfsConfig) error {
   // ルートディレクトリを変更
-  if err := unix.Chroot(c.RootfsPath); err != nil {
+  if err := unix.Chroot(c.RootDirPath); err != nil {
     return errors.WithStack(err)
   }
 

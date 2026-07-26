@@ -13,10 +13,10 @@
 
 ### [pivot_root](https://pkg.go.dev/golang.org/x/sys/unix#PivotRoot)
 
-ルートファイルシステムの**マウントを入れ替え**ます。  
-より正確には、**今までのルートファイルシステム**を`putold`のディレクトリにマウントし、`newroot`のディレクトリを**新しいルートファイルシステム**として`/`にマウントします。
+rootfsの**マウントを入れ替え**ます。  
+より正確には、**今までのrootfs**を`putold`のディレクトリにマウントし、`newroot`のディレクトリを**新しいrootfs**として`/`にマウントします。
 
-[4-1](/4-rootfs/1-mount/)で書いた通り、ルートファイルシステムも**マウントによって構築**されています。  
+[4-1](/4-rootfs/1-mount/)で書いた通り、rootfsも**マウントによって構築**されています。  
 このマウントを**入れ替えて**しまえば、抜ける手段はないだろうという算段です。  
 OS側で登録されているルートディレクトリを変更するだけのchrootと違い、**比較的安全**なルート移動方法です。
 
@@ -72,22 +72,22 @@ func SetupRootfs(c RootfsConfig) error {
     return errors.WithStack(err)
   }
 
-  // 既存のルートファイルシステムを移動させるディレクトリを作成
-  if err := os.MkdirAll(filepath.Join(c.RootfsPath, "/.old_root"), 0755); err != nil {
+  // 既存のrootfsを移動させるディレクトリを作成
+  if err := os.MkdirAll(filepath.Join(c.RootDirPath, "/.old_root"), 0755); err != nil {
     return errors.WithStack(err)
   }
 
-  // RootfsPathをバインドマウントし、ルートファイルシステムの管轄外とする
-  if err := unix.Mount(c.RootfsPath, c.RootfsPath, "", unix.MS_BIND, ""); err != nil {
+  // RootDirPathをバインドマウントし、rootfsの管轄外とする
+  if err := unix.Mount(c.RootDirPath, c.RootDirPath, "", unix.MS_BIND, ""); err != nil {
     return errors.WithStack(err)
   }
 
-  // ルートファイルシステムをRootfsPathにマウントし直す
-  if err := unix.PivotRoot(c.RootfsPath, filepath.Join(c.RootfsPath, ".old_root")); err != nil {
+  // rootfsをRootDirPathにマウントし直す
+  if err := unix.PivotRoot(c.RootDirPath, filepath.Join(c.RootDirPath, ".old_root")); err != nil {
     return errors.WithStack(err)
   }
 
-  // 古いルートファイルシステムはアンマウント・削除し、不可視にする
+  // 古いrootfsはアンマウント・削除し、不可視にする
   //  注: MNT_DETACHを付けてlazy unmountにしないとアンマウントできない
   if err := unix.Unmount("/.old_root", unix.MNT_DETACH); err != nil {
     return errors.WithStack(err)

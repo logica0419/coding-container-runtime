@@ -2,8 +2,8 @@ package main
 
 // rootfs設定
 type RootfsConfig struct {
-	// ルートファイルシステムのパス
-	RootfsPath string `json:"rootfs_path"`
+	// 新しいルートディレクトリのパス
+	RootDirPath string `json:"rootfs_path"`
 }
 
 func SetupRootfs(c RootfsConfig) error {
