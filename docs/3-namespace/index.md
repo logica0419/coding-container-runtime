@@ -11,4 +11,3 @@
 - [3-2. UTS Namespace](/3-namespace/2-uts/)
 - [3-3. Mount Namespace](/3-namespace/3-mount/)
 - [3-4. PID Namespaceとfork](/3-namespace/4-pid-fork/)
-- [3-5. 発展課題](/3-namespace/5-advanced/)
