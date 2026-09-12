@@ -97,38 +97,8 @@ func runCommand(c Config) error {
 Namespace内でマウントをしても**元のシェルに影響を及ぼさない**ことを確かめましょう。  
 Namespaceの分離には**root権限が必要**なので、`sudo su`を実行して**rootになってからプログラムを実行**して下さい。
 
-umountコマンドを使って`/proc`ディレクトリを**アンマウントすると**`ps`**の結果が見れなく**なるので、それを使って確かめてみます。  
-なお、`proc`ディレクトリについては[4-1](/4-rootfs/1-mount/)で詳しく紹介します。
-
-```console
-$ sudo su
-# make run
-go build -o main *.go
-./main run bash
-# ps                    ← ここではちゃんと表示できている
-    PID TTY          TIME CMD
- 177532 pts/8    00:00:00 sudo
- 177533 pts/8    00:00:00 su
- 177534 pts/8    00:00:00 bash
- 177589 pts/8    00:00:00 make
- 177634 pts/8    00:00:00 bash
- 177706 pts/8    00:00:00 ps
-# umount -l /proc
-# ps                    ← /procをアンマウントすると表示できない
-Error, do this: mount -t proc proc /proc
-# exit
-exit
-# ps                    ← Namespaceを抜けるとちゃんと表示できている
-    PID TTY          TIME CMD
- 177532 pts/8    00:00:00 sudo
- 177533 pts/8    00:00:00 su
- 177534 pts/8    00:00:00 bash
- 178291 pts/8    00:00:00 ps
-#
-```
-
-また、以下のように**バインドマウント**を行って確かめることもできます。  
-バインドマウントについても、[4-1](/4-rootfs/1-mount/)で詳しく紹介します。
+今回は**バインドマウント**を行って確かめてみます。  
+バインドマウントについては、[4-1](/4-rootfs/1-mount/)で詳しく紹介します。
 
 ```console
 $ sudo su
