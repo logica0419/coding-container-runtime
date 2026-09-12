@@ -1,6 +1,6 @@
 {
   "name": "Coding Container Runtime Dev ",
-  "image": "mcr.microsoft.com/devcontainers/base:bullseye",
+  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:4.1.0": {
       "version": "latest",
