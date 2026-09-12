@@ -76,7 +76,7 @@ Mount Namespaceを切り分けていても、**Mount Propagation**を正しく�
 func SetupRootfs(c RootfsConfig) error {
   // ルートディレクトリから再帰的にマウントのプロパゲーションを無効にする
   //  これをやらないと、pivot_root時にホストマシン側の/devや/sysなどの特殊ファイルの
-  //   マウントが壊れ、新しいシェルセッションが開けなくなるなどの支障が出る
+  //  マウントが壊れ、新しいシェルセッションが開けなくなるなどの支障が出る
   if err := unix.Mount("", "/", "", unix.MS_REC|unix.MS_SLAVE, ""); err != nil {
     return errors.WithStack(err)
   }
