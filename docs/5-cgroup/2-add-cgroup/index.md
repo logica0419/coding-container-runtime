@@ -10,7 +10,7 @@
 cgroupを追加するには、cgroupfsに対して**ディレクトリを作成**するだけでOKです。  
 Goの標準ライブラリを用いて、cgroupの追加を実装してみましょう！
 
-今回は、cgroupfsの**ルートディレクトリ直下**の子グループ、`sys/fs/cgroup/{コンテナ名}`としてcgroupを追加します。  
+今回は、cgroupfsの**ルートディレクトリ直下**の子cgroup、`sys/fs/cgroup/{コンテナ名}`としてcgroupを追加します。  
 コンテナ名は関数の引数`name`として渡されてます。  
 また、すでに同名のcgroupが存在する場合は、**削除してから再作成**してください。
 
@@ -35,7 +35,7 @@ Goの標準ライブラリを用いて、cgroupの追加を実装してみまし
 const CgroupRoot = "/sys/fs/cgroup"
 
 func SetupCgroup(name string, pid int, c CgroupConfig) error {
-  // コンテナ用の子グループ作成 (同名の子グループディレクトリがあれば削除)
+  // コンテナ用の子cgroup作成 (同名の子cgroupディレクトリがあれば削除)
   //  ディレクトリを作成した時点で、cgroupで操作可能なリソースに対応するファイルが生成される
   if err := os.RemoveAll(filepath.Join(CgroupRoot, name)); err != nil {
     return errors.WithStack(err)
@@ -191,7 +191,7 @@ cgroupを追加したら、次はコンテナの**プロセスをそのcgroupに
 const CgroupRoot = "/sys/fs/cgroup"
 
 func SetupCgroup(name string, pid int, c CgroupConfig) error {
-  // コンテナ用の子グループ作成 (同名の子グループディレクトリがあれば削除)
+  // コンテナ用の子cgroup作成 (同名の子cgroupディレクトリがあれば削除)
   //  ディレクトリを作成した時点で、cgroupで操作可能なリソースに対応するファイルが生成される
   if err := os.RemoveAll(filepath.Join(CgroupRoot, name)); err != nil {
     return errors.WithStack(err)

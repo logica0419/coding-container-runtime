@@ -20,12 +20,12 @@ type CgroupConfig struct {
 const CgroupRoot = "/sys/fs/cgroup"
 
 func SetupCgroup(name string, pid int, c CgroupConfig) error {
-	// cgroupの大元に、子グループでのCPUとメモリの管理を許可
+	// cgroupの大元に、子cgroupでのCPUとメモリの管理を許可
 	if err := os.WriteFile(filepath.Join(CgroupRoot, "cgroup.subtree_control"), []byte("+cpu +memory"), 0o700); err != nil {
 		return errors.WithStack(err)
 	}
 
-	// コンテナ用の子グループ作成 (同名の子グループディレクトリがあれば削除)
+	// コンテナ用の子cgroup作成 (同名の子cgroupディレクトリがあれば削除)
 	//	ディレクトリを作成した時点で、cgroupで操作可能なリソースに対応するファイルが生成される
 	if err := os.RemoveAll(filepath.Join(CgroupRoot, name)); err != nil {
 		return errors.WithStack(err)
