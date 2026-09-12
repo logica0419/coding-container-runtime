@@ -105,16 +105,17 @@ $ sudo su
 # make run
 go build -o main *.go
 ./main run bash
-# mkdir /tmp/container                       ← マウント元の準備
+# mount --make-rprivate /                     ← おまじない (4-3に少し繋がります)
+# mkdir /tmp/container                        ← マウント元の準備
 # echo "Mount Test" > /tmp/container/test.txt
 # ls -l /tmp/container/
 total 4
 -rw-r--r-- 1 root root 11 Dec 16 07:47 test.txt
-# mkdir /tmp/bind-dst                        ← マウント先の準備
+# mkdir /tmp/bind-dst                         ← マウント先の準備
 # ls -l /tmp/bind-dst/
 total 0
-# mount --bind /tmp/container /tmp/bind-dst  ← バインドマウント
-# ls -l /tmp/bind-dst/                       ← マウント元の中身が見れるように
+# mount --bind /tmp/container /tmp/bind-dst   ← バインドマウント
+# ls -l /tmp/bind-dst/                        ← マウント元の中身が見れるように
 total 4
 -rw-r--r-- 1 root root 11 Dec 16 07:47 test.txt
 # cat /tmp/bind-dst/test.txt
