@@ -1,9 +1,14 @@
 # 4-4. 特殊マウントを処理する
 
 (見かけ上の) ルートディレクトリを変更した後、procfsやsysfsなどの**特殊なファイルシステム**を再度マウントしないと、いくつかのコマンドがうまく動かなくなります。  
-ここでは代表的な特殊ファイルシステム、procfsを正しく処理して、`ps`コマンドが正しく動くようにしてみましょう。
+この節では、代表的な特殊ファイルシステムを正しく処理して、以下の2つのコマンドが正しく動くようにしてみましょう。
 
-## `ps`コマンドの挙動を確認する
+- `ps`コマンド
+- `apt update`コマンド
+
+## コマンドの挙動を確認する
+
+### `ps`コマンド
 
 ひとまず、今の状態のコンテナ内で`ps`コマンドを実行してみましょう。
 
@@ -19,13 +24,63 @@ Error, do this: mount -t proc proc /proc
 エラーが出ましたね。  
 `mount -t proc proc /proc`、すなわち`/proc`に**procfsを再度マウント**して下さい、と言われています。
 
+### `apt update`コマンド
+
+続いて、`apt update`コマンドを実行してみましょう。
+
+```console
+$ sudo su
+# make run
+go build -o main *.go
+./main run bash
+# apt update
+Get:1 http://security.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+Get:2 http://archive.ubuntu.com/ubuntu resolute InRelease [136 kB]
+Err:1 http://security.ubuntu.com/ubuntu resolute-security InRelease
+  Could not execute 'gpgv' to verify signature (is gnupg installed?)
+... (省略) ...
+Error: The repository 'http://security.ubuntu.com/ubuntu resolute-security InRelease' is not signed.
+Notice: Updating from such a repository can't be done securely, and is therefore disabled by default.
+Notice: See apt-secure(8) manpage for repository creation and user configuration details.
+Warning: OpenPGP signature verification failed: http://archive.ubuntu.com/ubuntu resolute InRelease: Could not execute 'gpgv' to verify signature (is gnupg installed?)
+... (省略) ...
+```
+
+`gpgv`による署名の検証に失敗しているようです。  
+詳細は省きますが、`gpgv`が正しく動くためには、**2つの特殊ファイルシステム**ディレクトリ、`/dev`および`/tmp`が正しく動いていなければいけません。
+
 ## procfsを再マウントする
 
-`mount -t proc proc /proc`と同じ内容をコードで書いて、**procfsを再マウント**してみましょう。  
+`mount -t proc proc /proc`と同じ内容、および`/dev`や`/tmp`のマウント処理をコードで書いて、**特殊ファイルシステムを再マウント**してみましょう。  
 `unix.Mount()`を使ってマウント処理を行います。
 
-:::details ヒント
-`unix.Mount()`でprocfsをマウントするには、`source`に空文字列、`fstype`に`proc`、`flags`に0を指定します。
+今回マウントする特殊ファイルシステム一覧は以下の通りです。
+
+| マウント先のディレクトリ | ファイルシステムの種類 |
+| ------------------------ | ---------------------- |
+| /proc                    | proc                   |
+| /dev                     | devtmpfs               |
+| /tmp                     | tmpfs                  |
+
+:::details ヒント1
+`unix.Mount()`で特殊ファイルシステムをマウントするには、`source`に空文字列、`fstype`にファイルシステムの種類、`flags`に`0`を指定します。
+:::
+
+:::details ヒント2
+全てのマウントは、先に**マウント先のディレクトリを作成**しておく必要があります。
+:::
+
+:::details ヒント3
+今回はマウントするファイルシステムが**3つある**ので、以下のような構造体を作って**配列で情報を持ち**、**ループで**マウント処理を行うと良いでしょう。
+
+```go
+// マウント情報
+type Mount struct {
+  Target string `json:"path"`
+  FsType string `json:"fs_type"`
+}
+```
+
 :::
 
 ### 想定解答
@@ -33,13 +88,27 @@ Error, do this: mount -t proc proc /proc
 :::details chrootの場合の想定解答
 
 ```go
+// マウント情報 // [!code ++]
+type Mount struct { // [!code ++]
+  Target string `json:"path"` // [!code ++]
+  FsType string `json:"fs_type"` // [!code ++]
+} // [!code ++]
+
+var mounts = []Mount{ // [!code ++]
+  {Target: "proc", FsType: "proc"}, // [!code ++]
+  {Target: "dev", FsType: "devtmpfs"}, // [!code ++]
+  {Target: "tmp", FsType: "tmpfs"}, // [!code ++]
+} // [!code ++]
+
 func SetupRootfs(c RootfsConfig) error {
-  // procディレクトリをマウント // [!code ++]
-  if err := os.MkdirAll(filepath.Join(c.RootDirPath, "proc"), 0o755); err != nil { // [!code ++]
-    return errors.WithStack(err) // [!code ++]
-  } // [!code ++]
-  if err := unix.Mount("", filepath.Join(c.RootDirPath, "proc"), "proc", 0, ""); err != nil { // [!code ++]
-    return errors.WithStack(err) // [!code ++]
+  // 特殊ディレクトリを作成・マウント // [!code ++]
+  for _, mount := range mounts { // [!code ++]
+    if err := os.MkdirAll(filepath.Join(c.RootDirPath, mount.Target), 0o755); err != nil { // [!code ++]
+      return errors.WithStack(err) // [!code ++]
+    } // [!code ++]
+    if err := unix.Mount("", filepath.Join(c.RootDirPath, mount.Target), mount.FsType, 0, ""); err != nil { // [!code ++]
+      return errors.WithStack(err) // [!code ++]
+    } // [!code ++]
   } // [!code ++]
 
   // 見かけ上のルートディレクトリを変更
@@ -61,6 +130,18 @@ func SetupRootfs(c RootfsConfig) error {
 :::details pivot_rootの場合の想定解答
 
 ```go
+// マウント情報 // [!code ++]
+type Mount struct { // [!code ++]
+  Target string `json:"path"` // [!code ++]
+  FsType string `json:"fs_type"` // [!code ++]
+} // [!code ++]
+
+var mounts = []Mount{ // [!code ++]
+  {Target: "proc", FsType: "proc"}, // [!code ++]
+  {Target: "dev", FsType: "devtmpfs"}, // [!code ++]
+  {Target: "tmp", FsType: "tmpfs"}, // [!code ++]
+} // [!code ++]
+
 func SetupRootfs(c RootfsConfig) error {
   // ルートディレクトリから再帰的にマウントのプロパゲーションを無効にする
   //  これをやらないと、pivot_root時にホストマシン側の/devや/sysなどの特殊ファイルの
@@ -79,12 +160,14 @@ func SetupRootfs(c RootfsConfig) error {
     return errors.WithStack(err)
   }
 
-  // procディレクトリをマウント // [!code ++]
-  if err := os.MkdirAll(filepath.Join(c.RootDirPath, "proc"), 0o755); err != nil { // [!code ++]
-    return errors.WithStack(err) // [!code ++]
-  } // [!code ++]
-  if err := unix.Mount("", filepath.Join(c.RootDirPath, "proc"), "proc", 0, ""); err != nil { // [!code ++]
-    return errors.WithStack(err) // [!code ++]
+  // 特殊ディレクトリを作成・マウント // [!code ++]
+  for _, mount := range mounts { // [!code ++]
+    if err := os.MkdirAll(filepath.Join(c.RootDirPath, mount.Target), 0o755); err != nil { // [!code ++]
+      return errors.WithStack(err) // [!code ++]
+    } // [!code ++]
+    if err := unix.Mount("", filepath.Join(c.RootDirPath, mount.Target), mount.FsType, 0, ""); err != nil { // [!code ++]
+      return errors.WithStack(err) // [!code ++]
+    } // [!code ++]
   } // [!code ++]
 
   // rootfsをRootDirPathにマウントし直す
@@ -112,12 +195,13 @@ func SetupRootfs(c RootfsConfig) error {
 
 :::
 
-## `ps`コマンドが正しく動くことを確かめる
+## コマンドが正しく動くことを確かめる
 
 この状態のコンテナ内で`ps`コマンドを実行し、正しく動くことを確かめましょう。
 
 ```console
-$ make run
+$ sudo su
+# make run
 go build -o main *.go
 ./main run bash
 # ps
@@ -132,9 +216,23 @@ go build -o main *.go
 #
 ```
 
-しっかりと`ps`コマンドが動いていれば成功です！
+また、`apt update`コマンドも正しく動くことを確認してみましょう。
 
-これと同様に、**sysfs**や**devtmpfs**などの特殊ファイルシステムもマウントすることで、より多くのコマンドが正しく動くようになります。  
+```console
+$ sudo su
+# make run
+go build -o main *.go
+./main run bash
+# apt update
+Get:1 http://security.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+... (省略) ...
+Get:17 http://archive.ubuntu.com/ubuntu resolute-backports/universe amd64 Packages [3306 B]
+Fetched 26.0 MB in 4s (6117 kB/s)
+All packages are up to date.
+#
+```
+
+同様に他の特殊ファイルシステムもマウントすることで、より多くのコマンドが正しく動くようになります。  
 runcなどOCI Runtime Specに則ったコンテナランタイムでは、**全てのマウント情報は外から**`config.json`という設定ファイルで渡されます。  
 `runc spec`というコマンドでruncのデフォルトの`config.json`が生成できるのですが、この設定ファイルの中では**必要な特殊ファイルシステムをほぼ全てマウント**するようになっています。  
 ぜひ一度確認してみてください。
