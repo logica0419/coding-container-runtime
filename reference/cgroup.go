@@ -13,8 +13,8 @@ import (
 type CgroupConfig struct {
 	// CPU使用率の上限 (パーセント)
 	MaxCpuPercent int `json:"max_cpu_percent"`
-	// メモリ使用量の上限 (MB)
-	MaxMemoryMB int `json:"max_memory_mb"`
+	// メモリ使用量の上限 (バイト)
+	MaxMemory int `json:"max_memory"`
 }
 
 const CgroupRoot = "/sys/fs/cgroup"
@@ -49,8 +49,11 @@ func SetupCgroup(name string, pid int, c CgroupConfig) error {
 	}
 
 	// メモリの上限を設定
-	payload = strconv.Itoa(c.MaxMemoryMB << 20)
+	payload = strconv.Itoa(c.MaxMemory)
 	if err := os.WriteFile(filepath.Join(CgroupRoot, name, "memory.max"), []byte(payload), 0o755); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := os.WriteFile(filepath.Join(CgroupRoot, name, "memory.swap.max"), []byte("0"), 0o755); err != nil {
 		return errors.WithStack(err)
 	}
 

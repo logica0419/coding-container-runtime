@@ -89,7 +89,7 @@ func runCommand(c Config) error {
 // initサブコマンド
 func initCommand(c Config) error {
 	// 分離すべき残りのNamespaceを分離
-	if err := unix.Unshare(unix.CLONE_NEWUTS | unix.CLONE_NEWNET | unix.CLONE_NEWNS); err != nil {
+	if err := unix.Unshare(unix.CLONE_NEWUTS | unix.CLONE_NEWNS); err != nil {
 		return errors.WithStack(err)
 	}
 
