@@ -43,6 +43,8 @@ func SetupCgroup(name string, pid int, c CgroupConfig) error {
   if err := os.MkdirAll(filepath.Join(CgroupRoot, name), 0o755); err != nil {
     return errors.WithStack(err)
   }
+
+  return nil
 }
 ```
 
@@ -102,7 +104,7 @@ cgroupを追加したら、次はコンテナの**プロセスをそのcgroupに
 
 コンテナになるべきプロセスのIDは、関数の引数`pid`として渡されてます。
 
-::: details ヒント
+:::details ヒント
 ファイルに書き込むには、[`os.WriteFile()`](https://pkg.go.dev/os#WriteFile)を使うと良いでしょう。
 :::
 
@@ -127,6 +129,8 @@ func SetupCgroup(name string, pid int, c CgroupConfig) error {
   if err := os.WriteFile(filepath.Join(CgroupRoot, name, "cgroup.procs"), []byte(strconv.Itoa(pid)), 0o755); err != nil { // [!code ++]
     return errors.WithStack(err) // [!code ++]
   } // [!code ++]
+
+  return nil
 }
 ```
 
@@ -160,4 +164,5 @@ $ cat /sys/fs/cgroup/container/cgroup.procs
 
 :::
 
-このように、 プロセスIDが**2つ書き込まれている**ことが確認できるはずです。
+このように、 プロセスIDが**2つ書き込まれている**ことが確認できるはずです。  
+番号が小さい方が**実際に書き込んだPID** (mainバイナリのPID)、番号が大きい方がその**子プロセス** (bash) のPIDです。子プロセスのPIDは**自動的に**書き込まれています。
