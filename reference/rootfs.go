@@ -14,6 +14,18 @@ type RootfsConfig struct {
 	RootDirPath string `json:"rootfs_path"`
 }
 
+// マウント情報
+type Mount struct {
+	Target string `json:"path"`
+	FsType string `json:"fs_type"`
+}
+
+var mounts = []Mount{
+	{Target: "proc", FsType: "proc"},
+	{Target: "dev", FsType: "devtmpfs"},
+	{Target: "tmp", FsType: "tmpfs"},
+}
+
 func SetupRootfs(c RootfsConfig) error {
 	// ルートディレクトリから再帰的にマウントのプロパゲーションを無効にする
 	//  これをやらないと、pivot_root時にホストマシン側の/devや/sysなどの特殊ファイルの
@@ -32,12 +44,14 @@ func SetupRootfs(c RootfsConfig) error {
 		return errors.WithStack(err)
 	}
 
-	// procディレクトリをマウント
-	if err := os.MkdirAll(filepath.Join(c.RootDirPath, "proc"), 0o755); err != nil {
-		return errors.WithStack(err)
-	}
-	if err := unix.Mount("", filepath.Join(c.RootDirPath, "proc"), "proc", 0, ""); err != nil {
-		return errors.WithStack(err)
+	// 特殊ディレクトリを作成・マウント
+	for _, mount := range mounts {
+		if err := os.MkdirAll(filepath.Join(c.RootDirPath, mount.Target), 0o755); err != nil {
+			return errors.WithStack(err)
+		}
+		if err := unix.Mount("", filepath.Join(c.RootDirPath, mount.Target), mount.FsType, 0, ""); err != nil {
+			return errors.WithStack(err)
+		}
 	}
 
 	// rootfsをRootDirPathにマウントし直す
@@ -64,12 +78,14 @@ func SetupRootfs(c RootfsConfig) error {
 
 // 参考: 第一段階、Chroot版の実装 (脆弱)
 func SetupRootfs_Chroot(c RootfsConfig) error {
-	// procディレクトリをマウント
-	if err := os.MkdirAll(filepath.Join(c.RootDirPath, "proc"), 0o755); err != nil {
-		return errors.WithStack(err)
-	}
-	if err := unix.Mount("", filepath.Join(c.RootDirPath, "proc"), "proc", 0, ""); err != nil {
-		return errors.WithStack(err)
+	// 特殊ディレクトリを作成・マウント
+	for _, mount := range mounts {
+		if err := os.MkdirAll(filepath.Join(c.RootDirPath, mount.Target), 0o755); err != nil {
+			return errors.WithStack(err)
+		}
+		if err := unix.Mount("", filepath.Join(c.RootDirPath, mount.Target), mount.FsType, 0, ""); err != nil {
+			return errors.WithStack(err)
+		}
 	}
 
 	// 見かけ上のルートディレクトリを変更
