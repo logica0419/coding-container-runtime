@@ -10,7 +10,7 @@ import (
 
 // rootfs設定
 type RootfsConfig struct {
-	// 新しい(見かけ上の) ルートディレクトリのパス
+	// 新しい (見かけ上の) ルートディレクトリのパス
 	RootDirPath string `json:"rootfs_path"`
 }
 
@@ -28,7 +28,7 @@ var mounts = []Mount{
 
 func SetupRootfs(c RootfsConfig) error {
 	// ルートディレクトリから再帰的にマウントのプロパゲーションを無効にする
-	//  これをやらないと、pivot_root時にホストマシン側の/devや/sysなどの特殊ファイルの
+	//  これをやらないと、pivot_root時にホスト側の/devや/sysなどの特殊ファイルの
 	// 	マウントが壊れ、新しいシェルセッションが開けなくなるなどの支障が出る
 	if err := unix.Mount("", "/", "", unix.MS_REC|unix.MS_SLAVE, ""); err != nil {
 		return errors.WithStack(err)

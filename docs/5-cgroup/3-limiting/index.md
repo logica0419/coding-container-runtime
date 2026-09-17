@@ -131,10 +131,11 @@ func SetupCgroup(name string, pid int, c CgroupConfig) error {
 
 ## CPU使用量が制限されていることを確かめる
 
-実際にCPU使用量が制限されていることを確認してみましょう。
+実際にCPU使用量が制限されていることを確かめてみましょう。  
+cgroupの操作には**root権限が必要**なので、`sudo su`を実行して**rootになってからプログラムを実行**してください。
 
 以下の例は、CPU使用率の上限を**100%に設定**した場合です。  
-`stress`コマンドを使って**2プロセスでCPU負荷** (2コア分消費するはず) をかけても、合計のCPU使用率が**100%を超えない**ことが確認できます。
+`stress`コマンドを使って**2プロセスでCPU負荷** (2コア分消費するはず) をかけても、合計のCPU使用率が**100%を超えない**ことが確かめられます。
 
 ::: warning プログラム実行用シェル
 
@@ -157,7 +158,7 @@ stress: info: [94119] dispatching hogs: 2 cpu, 0 io, 0 vm, 0 hdd
 
 このスクリーンショットのように、**2プロセスでCPU負荷**をかけても、合計のCPU使用率が**100%を超えな**ければ成功です。
 
-なお、コンテナを抜けてから改めて`stress -c 2`を実行した場合、2つのプロセスが**それぞれ約100%のCPUを使用**しているのが確認できます。
+なお、コンテナを抜けてから改めて`stress -c 2`を実行した場合、2つのプロセスが**それぞれ約100%のCPUを使用**しているのが確かめられます。
 
 ![コンテナ外の例](./2.png)
 
@@ -236,10 +237,10 @@ func SetupCgroup(name string, pid int, c CgroupConfig) error {
 
 ## メモリ使用量が制限されていることを確かめる
 
-実際にメモリ使用量が制限されていることを確認してみましょう。
+実際にメモリ使用量が制限されていることを確かめてみましょう。
 
 以下の例は、メモリ使用量の上限を**200MBに設定**した場合です。  
-`stress`コマンドを使って**1GB分のメモリ確保**に挑戦すると、**OOM Kill**が発生してプロセスが**強制終了**されることが確認できます。
+`stress`コマンドを使って**1GB分のメモリ確保**に挑戦すると、**OOM Kill**が発生してプロセスが**強制終了**されることが確かめられます。
 
 ```console
 $ sudo su
@@ -251,7 +252,7 @@ stress: info: [74] dispatching hogs: 0 cpu, 0 io, 1 vm, 0 hdd
 stress: FAIL: [74] (425) <-- worker 75 got signal 9
 stress: WARN: [74] (427) now reaping child worker processes
 stress: FAIL: [74] (461) failed run completed in 1s
-# dmesg -T | grep -i oom          ← OOM Killerのログを確認
+# dmesg -T | grep -i oom          ← OOM Killerのログを確かめる
 ... (省略) ...
 [Wed Sep 16 17:51:34 2026] stress invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=0
 [Wed Sep 16 17:51:34 2026]  oom_kill_process+0x106/0x230
@@ -260,7 +261,7 @@ stress: FAIL: [74] (461) failed run completed in 1s
 [Wed Sep 16 17:51:34 2026] Memory cgroup out of memory: Killed process 4040 (stress) total-vm:1052536kB, anon-rss:193536kB, file-rss:592kB, shmem-rss:0kB, UID:0 pgtables:440kB oom_score_adj:0
 ```
 
-`stress`コマンドが`worker {worker番号} got signal 9` (Signal 9は**SIGKILL**) というログを吐いて**強制終了**されていることが確認できますね。  
+`stress`コマンドが`worker {worker番号} got signal 9` (Signal 9は**SIGKILL**) というログを吐いて**強制終了**されていることが確かめられますね。  
 OOM Killerのログには`Memory cgroup out of memory: Killed process {PID} (stress)`と表示され、**cgroupのメモリ制限に引っかかった**ことがわかります。
 
 なお、150MB程度のメモリ確保であれば、OOM Killは発生せず正常に実行できるはずです。

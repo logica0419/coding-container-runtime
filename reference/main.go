@@ -74,7 +74,7 @@ func runCommand(c Config) error {
 	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
 
 	// Go側の都合で、PID Namespaceを分離した後にexec.Cmdの実行はできないので
-	// PID Namespaceを分離しながら呼びだすようSysProcAttrを設定する
+	// PID Namespaceを分離しながら呼び出すようSysProcAttrを設定する
 	cmd.SysProcAttr = &unix.SysProcAttr{
 		Cloneflags: unix.CLONE_NEWPID,
 	}

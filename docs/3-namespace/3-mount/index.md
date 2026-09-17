@@ -42,7 +42,7 @@ func runCommand(c Config) error {
 }
 ```
 
-この節では、既に仮置きされていた**Mount Namespaceの処理を**、先程記述したUTS Namespaceの設定に**合体**させてみましょう！
+この節では、既に仮置きされていた**Mount Namespaceの処理を**、先ほど記述したUTS Namespaceの設定に**合体**させてみましょう！
 
 :::details ヒント1
 `flags`は、ビット論理和演算子`|`を使うことで、複数を同時に指定することができます。
@@ -95,7 +95,7 @@ func runCommand(c Config) error {
 ## Namespaceが分かれたことを確かめる
 
 Namespace内でマウントをしても**元のシェルに影響を及ぼさない**ことを確かめましょう。  
-Namespaceの分離には**root権限が必要**なので、`sudo su`を実行して**rootになってからプログラムを実行**して下さい。
+Namespaceの分離には**root権限が必要**なので、`sudo su`を実行して**rootになってからプログラムを実行**してください。
 
 今回は**バインドマウント**を行って確かめてみます。  
 バインドマウントについては、[4-1](/4-rootfs/1-mount/)で詳しく紹介します。

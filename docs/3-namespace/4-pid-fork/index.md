@@ -1,14 +1,14 @@
 # 3-4. PID Namespaceとfork
 
 さあ、いよいよ3章の大詰め、**PID Namespace**です。  
-(UTC、Mount、PID以外のNamespaceは、**効果を確かめにくい**ため今回は扱いません)
+(UTS、Mount、PID以外のNamespaceは、**効果を確かめにくい**ため今回は扱いません)
 
 ## PID Namespaceを分けてみる
 
-PID Namespaceは非常に強力なNamespaceで、**プロセスIDの採番をやり直す**と共に、**Namespace外のプロセスを見えない**状態にします。  
-PID Namespaceを分けると**Namespace内のinitプロセス (PID: 1)** が作られ、そこをルートとした新しいプロセスIDの採番がなされます。
+PID Namespaceは非常に強力なNamespaceで、**PIDの採番をやり直す**と共に、**Namespace外のプロセスを見えない**状態にします。  
+PID Namespaceを分けると**Namespace内のinitプロセス (PID: 1)** が作られ、そこをルートとした新しいPIDの採番がなされます。
 
-ひとまず先程までと同じ要領でNamespaceを分けてみましょう！
+ひとまず先ほどまでと同じ要領でNamespaceを分けてみましょう！
 
 ### 想定解答
 
@@ -51,7 +51,7 @@ func runCommand(c Config) error {
 ## 一筋縄ではいかないPID Namespace
 
 それではコンテナを起動してみましょう。  
-Namespaceの分離には**root権限が必要**なので、`sudo su`を実行して**rootになってからプログラムを実行**して下さい。
+Namespaceの分離には**root権限が必要**なので、`sudo su`を実行して**rootになってからプログラムを実行**してください。
 
 ```console
 $ sudo su
@@ -61,7 +61,7 @@ go build -o main *.go
 ```
 
 ...おそらくどの環境でも**何かしらのエラー**が出たかと思います。  
-特にDev Containerで取り組んでいる皆さんは、以下のようなエラーが高速で繰り返し表示されたはずです (`ctrl(cmd) + c`を長押しで止まる時がありますが、止まらなければ**PIDを調べてkill**するか**Dev Containerを再起動**して下さい)。
+特にDev Containerで取り組んでいる皆さんは、以下のようなエラーが高速で繰り返し表示されたはずです (`ctrl(cmd) + c`を長押しで止まる時がありますが、止まらなければ**PIDを調べてkill**するか**Dev Containerを再起動**してください)。
 
 ```plaintext
 bash: fork: Cannot allocate memory
@@ -82,7 +82,7 @@ bash: fork: Cannot allocate memory
 ```
 
 どうやらPIDも**振り直されてなさ**そうです。  
-[3-1](/3-namespace/1-os-exec-syscall/#今のコードの挙動を見る)と同様にプロセスツリーを表示すると、`echo $$`で表示されたPIDはホスト側のPIDで、**PIDが振り直されていない**ことがわかります (プロセスツリーの確認時は、`sudo su`**した後のシェル**で`pstree`に入れるPIDを取得するのがおススメです)。
+[3-1](/3-namespace/1-os-exec-syscall/#今のコードの挙動を見る)と同様にプロセスツリーを表示すると、`echo $$`で表示されたPIDはホスト側のPIDで、**PIDが振り直されていない**ことがわかります (プロセスツリーの確認時は、`sudo su`**した後のシェル**で`pstree`に入れるPIDを取得するのがおすすめです)。
 
 ::: tip 挙動確認用シェル
 
@@ -108,7 +108,7 @@ Linuxの都合上、生成されたプロセスの**自認しているPIDを後�
 ## PID Namespaceを正しく実装する
 
 では、PID Namespaceを**正しく**動かしてみましょう！  
-以下フローチャートのような処理の流れを実装して下さい。
+以下フローチャートのような処理の流れを実装してください。
 
 ![実装するロジック](./2.dio.png)
 
@@ -164,7 +164,7 @@ func runCommand(c Config) error {
   cmd := exec.Command("/proc/self/exe", "init") // [!code ++]
   cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr // [!code ++]
   // Go側の都合で、PID Namespaceを分離した後にexec.Cmdの実行はできないので // [!code ++]
-  // PID Namespaceを分離しながら呼びだすようSysProcAttrを設定する // [!code ++]
+  // PID Namespaceを分離しながら呼び出すようSysProcAttrを設定する // [!code ++]
   cmd.SysProcAttr = &unix.SysProcAttr{ // [!code ++]
     Cloneflags: unix.CLONE_NEWPID, // [!code ++]
   } // [!code ++]
@@ -206,7 +206,7 @@ func initCommand(c Config) error { // [!code ++]
 ## Namespaceが分かれたことを確かめる
 
 実行したシェルの**PIDが1**になっていることを確かめましょう。  
-Namespaceの分離には**root権限が必要**なので、`sudo su`を実行して**rootになってからプログラムを実行**して下さい。
+Namespaceの分離には**root権限が必要**なので、`sudo su`を実行して**rootになってからプログラムを実行**してください。
 
 ```console
 $ sudo su
@@ -218,7 +218,7 @@ go build -o main *.go
 #
 ```
 
-実行したエントリーポイントが**PID 1のinitプロセス**になっていることが確認できましたね！
+実行したエントリーポイントが**PID 1のinitプロセス**になっていることが確かめられましたね！
 
 なお、`ps`コマンドを実行するとまだ**ホスト側の全プロセス**が見えてしまいますが、これの修正には`/proc`**ディレクトリの再マウント**が必要です。  
 `/proc`ディレクトリ周りについては次の章で詳しく解説します。

@@ -34,14 +34,14 @@ UTS Namespaceは、**hostnameの設定を分ける**ことができるNamespace�
 Namespace同士が**異なるホスト名**を持つことができますし、ホスト名の変更が互いに**影響を及ぼしません**。
 
 早速[`unix.Unshare()`](https://pkg.go.dev/golang.org/x/sys/unix#Unshare)を使ってNamespaceを分離してみましょう！  
-以下の理由で、Namespaceの処理は**cgroupとrootfsの間**に入れて下さい。
+以下の理由で、Namespaceの処理は**cgroupとrootfsの間**に入れてください。
 
 - cgroupで**リソースを制限してから**他の処理を行いたい
   - コンテナ作成処理の**暴走を避ける**ため
 - rootfsの処理にはNamespaceで**隔離された環境が必要**
 
 :::details ヒント
-UTC Namespaceの`flags`は`unix.CLONE_NEWUTS`です！
+UTS Namespaceの`flags`は`unix.CLONE_NEWUTS`です！
 :::
 
 ### 想定解答
@@ -85,7 +85,7 @@ func runCommand(c Config) error {
 ## Namespaceが分かれたことを確かめる
 
 hostnameをNamespace内で設定しても**元のシェルに影響を及ぼさない**ことを確かめましょう。  
-Namespaceの分離には**root権限が必要**なので、`sudo su`を実行して**rootになってからプログラムを実行**して下さい。
+Namespaceの分離には**root権限が必要**なので、`sudo su`を実行して**rootになってからプログラムを実行**してください。
 
 - `hostname`: ホスト名表示
 - `hostname {文字列}`: ホスト名を変更

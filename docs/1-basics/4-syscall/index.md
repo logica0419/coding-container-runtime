@@ -28,7 +28,7 @@ ssize_t write(int fd, const void *buf, size_t count);
 
 Linuxのマニュアルは**manページ**というものにまとめられており、syscallはこの**第2章**に書かれています。  
 manの各ページのタイトルは`名前(章番号)`となっているため、`open()`syscallは`open(2)`と記載されています。  
-manページの日本語訳を有志でやって下さっている方々もいますので、syscallがわからなくなったときは以下のページを参照すると良いでしょう。
+manページの日本語訳を有志でやってくださっている方々もいますので、syscallがわからなくなったときは以下のページを参照すると良いでしょう。
 
 <https://linuxjm.sourceforge.io/INDEX/ldp.html#sec2>
 
@@ -41,14 +41,14 @@ Go言語では**直接syscallを呼ぶ**ことができます。今回のハン�
 - [`golang.org/x/sys/unix`](https://pkg.go.dev/golang.org/x/sys/unix)
 
 ただ、`syscall`のGoDocにも書いてある通り、`golang.org/x/sys/unix`**を使うべき**です。  
-`syscall`パッケージが**更新されなくなった**などの理由がありますが、詳しくは[こちらのブログ](https://golang.org/s/go1.4-syscall)を読んでみて下さい。
+`syscall`パッケージが**更新されなくなった**などの理由がありますが、詳しくは[こちらのブログ](https://golang.org/s/go1.4-syscall)を読んでみてください。
 
 ## 今回使うsyscall
 
 ここで、今回の**ワークショップで取り上げる/使うsyscall**の一覧を載せておきます。  
 基本的にはGoの`golang.org/x/sys/unix`パッケージのAPIですが、一部`unix`パッケージから呼び出せないものはCのAPIを記載しています。
 
-詳しい機能や呼び出し方は**ハンズオンで説明**しますので、ここでは色々なsyscallがあるんだなぁと思って下されば幸いです。
+詳しい機能や呼び出し方は**ハンズオンで説明**しますので、ここでは色々なsyscallがあるんだなぁと思ってくだされば幸いです。
 
 - `fork()`
 
