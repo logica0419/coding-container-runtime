@@ -1,4 +1,4 @@
-github.com/k1LoW/errors v1.2.0 h1:sMutU6dlQbYhH2Wk/xJNwZ/iNadzhMzzvU5K2OkH9pM=
-github.com/k1LoW/errors v1.2.0/go.mod h1:FnyqU5omnd/+J2ViEsDaIZXTZGuRMZ5uDpLEqrEsMp4=
+github.com/k1LoW/errors v1.2.1 h1:xHfjFaFn+htIdq3NemkiGtVo5Voi3oplgL8Djg6giYs=
+github.com/k1LoW/errors v1.2.1/go.mod h1:FnyqU5omnd/+J2ViEsDaIZXTZGuRMZ5uDpLEqrEsMp4=
 golang.org/x/sys v0.48.0 h1:bbX/i/6MgT9BVLM9RT1thmxL04yeTAhbEz4SyadbXoo=
 golang.org/x/sys v0.48.0/go.mod h1:hNLxWAXmnKAxqDtdwIYC4bM9oQPEecfsnNMuSxOs3og=
