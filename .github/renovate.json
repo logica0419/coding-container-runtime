@@ -5,6 +5,9 @@
   "prConcurrentLimit": 0,
   "labels": ["dependencies"],
   "postUpdateOptions": ["gomodUpdateImportPaths", "gomodTidy"],
+  "devcontainer": {
+    "managerFilePatterns": ["/(^|/)templates/\\.devcontainer/devcontainer\\.json$/"]
+  },
   "packageRules": [
     {
       "description": "Upgrade go indirect dependencies",
