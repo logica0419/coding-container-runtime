@@ -2,7 +2,7 @@ module original-runtime
 
 go 1.26.0
 
-toolchain go1.27.1
+toolchain go1.27.2
 
 require (
 	github.com/k1LoW/errors v1.2.1
