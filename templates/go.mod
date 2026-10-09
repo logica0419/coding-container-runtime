@@ -6,5 +6,5 @@ toolchain go1.27.2
 
 require (
 	github.com/k1LoW/errors v1.2.1
-	golang.org/x/sys v0.48.0
+	golang.org/x/sys v0.49.0
 )
